@@ -603,56 +603,38 @@
         position: relative;
         z-index: 1;
       }
-
-      /* ── What We Implemented — Card Grid ── */
-      .impl-grid {
+      .impl-bullets {
+        margin-top: 12px;
+        padding-left: 0;
+        list-style: none;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 14px;
+        gap: 8px;
       }
-      .impl-card {
-        background: rgba(230, 244, 242, 0.45);
-        border: 1px solid rgba(42, 127, 114, 0.18);
-        border-radius: 12px;
-        padding: 14px 16px;
-        transition: background 0.22s, border-color 0.22s, box-shadow 0.22s;
-      }
-      .impl-card:hover {
-        background: rgba(42, 127, 114, 0.09);
-        border-color: rgba(42, 127, 114, 0.32);
-        box-shadow: 0 4px 16px rgba(42, 127, 114, 0.1);
-      }
-      .impl-card-title {
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--teal-deep);
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        margin-bottom: 6px;
+      .impl-bullet-item {
         display: flex;
-        align-items: center;
-        gap: 7px;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 12.5px;
+        color: var(--text-mid);
+        line-height: 1.6;
+        background: var(--cream);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 11px 14px;
       }
-      .impl-card-title::before {
-        content: "";
-        display: inline-block;
-        width: 6px;
-        height: 6px;
+      .impl-bullet-dot {
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
         background: var(--teal);
         flex-shrink: 0;
-      }
-      .impl-card-detail {
-        font-size: 12.5px;
-        color: var(--text-mid);
-        line-height: 1.65;
-        font-weight: 400;
+        margin-top: 4px;
+        opacity: 0.75;
       }
       @media (max-width: 640px) {
-        .impl-grid { grid-template-columns: 1fr; }
+        .impl-bullets { grid-template-columns: 1fr; }
       }
-
       .tools-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
       .tool-chip {
         background: var(--teal-pale);
@@ -852,10 +834,11 @@
             "Eliminating manual Excel consolidation that introduced errors every cycle",
           ],
           implementation: [
-            { what: "Multi-Org Zoho Books Integration into One Workspace", detail: "Connected both India and USA Zoho Books organisations into a single unified Zoho Analytics workspace. All bank transactions, FD records, and balances from both entities now flow into one governed data layer automatically — no manual exports." },
-            { what: "Date-Aware Forex Rate Engine in Zoho Analytics SQL", detail: "Built a structured forex rate reference table in Zoho Analytics and wrote SQL logic to apply the correct rate based on context: transaction-date rates for bank balance conversions, and reporting-date spot rates for fixed deposit valuations. No hardcoded rates. Fully dynamic." },
-            { what: "Consolidated USD Fund Position Dashboard", detail: "Deployed an executive dashboard in Zoho Analytics showing consolidated USD liquidity across: bank account balances (India + USA), fixed deposit positions by maturity date, and total group cash — all in USD, refreshed live." },
-            { what: "Automated Daily Refresh — Zero Manual Trigger", detail: "Configured the full pipeline to refresh automatically every day via Zoho Analytics scheduled sync. The CFO opens the dashboard each morning and sees current consolidated liquidity. No one downloads a file, converts a currency, or builds a sheet." },
+            "Integrated both Zoho Books organizations into a unified Zoho Analytics workspace",
+            "Designed a structured forex rate table with date-based selection logic",
+            "Built intelligent conversion logic where bank balances used transaction-date rates and fixed deposits used reporting-date rates",
+            "Created a consolidated USD Fund Position dashboard covering bank balances, FD balances, and total group liquidity",
+            "Enabled full automation with live refresh directly from accounting data"
           ],
           results: [
             { val: "100%", lbl: "Manual Work Removed" },
@@ -890,11 +873,11 @@
             "Automated weekly delivery to all department heads — no one should ever have to press Send",
           ],
           implementation: [
-            { what: "Live Zoho Books → Zoho Analytics Data Connector", detail: "Configured a native live sync between Zoho Books and Zoho Analytics. Every transaction — sales invoices, purchase bills, payments, journals — flows into the reporting layer automatically. No exports, no imports, no lag." },
-            { what: "Star-Schema Data Model with 3-Tier Product Hierarchy", detail: "Built a structured data model in Zoho Analytics with dedicated dimension tables for products (3-tier category hierarchy), customers, salespersons, and cost centers — replacing 40 disconnected spreadsheets with one clean, governed source of truth." },
-            { what: "800+ Excel Formula Replacements via Zoho Analytics SQL", detail: "Rewrote every margin calculation, aging bucket classification, and budget variance formula as auditable SQL query tables in Zoho Analytics. Consistent, version-controlled, and reproducible — unlike Excel formulas that break when someone edits the wrong cell." },
-            { what: "8-Tab Executive MIS Dashboard in Zoho Analytics", detail: "Built a multi-tab MIS dashboard covering: Sales Summary, Customer-wise Collections, Payables Aging, Margin by Category, Cost Center Variance, Salesperson Scorecard, Top/Bottom Customer Rankings, and Outstanding Heatmap — all live from Zoho Books." },
-            { what: "Monday 8AM Automated PDF Delivery via Zoho Scheduler", detail: "Configured Zoho Analytics' scheduled report delivery to send formatted PDFs to all department heads every Monday at 8 AM. No manual trigger. No dependency on any individual. It goes out every week, automatically." },
+            "Connected Zoho Books live data into Zoho Analytics with zero manual exports",
+            "Built a clean star-schema data model with a 3-tier product hierarchy and dimension tables for customers, salespersons, and cost centers",
+            "Replaced 800+ Excel formulas with auditable SQL query tables covering margins, aging buckets, and budget variances",
+            "Deployed an 8-tab executive MIS dashboard covering sales, collections, payables, margins, cost centers, and salesperson scorecards",
+            "Configured automated PDF delivery to all department heads every Monday at 8 AM via Zoho Scheduler"
           ],
           results: [
             { val: "Zero", lbl: "Manual Effort" },
@@ -929,11 +912,11 @@
             "30+ project managers each with their own estimating style needed one consistent input format",
           ],
           implementation: [
-            { what: "Zoho Books Project & Phase Tagging Framework", detail: "Restructured Zoho Books to tag every expense, bill, subcontractor payment, and invoice to a specific project AND phase at entry. Introduced custom fields for phase codes so data is clean from Day 1 — not cleaned up after the fact." },
-            { what: "Budget Upload Template → Zoho Analytics Auto-Feed", detail: "Designed a standardised Excel template for Project Managers to submit phase-wise cost estimates. Built an automated import flow into Zoho Analytics so budget data populates the comparison layer the moment a template is submitted." },
-            { what: "Retention & Subcontractor Milestone Tracker", detail: "Built SQL-driven retention calculations and subcontractor milestone payment schedules in Zoho Analytics for every active contract. Finance can see exactly what retention is held, when it's due, and which advances are yet to be recovered." },
-            { what: "Early Warning Alert — 85% Budget / 80% Progress Threshold", detail: "Configured automated alerts in Zoho Analytics that fire the moment a project phase crosses 85% of budget before physical completion reaches 80%. Alert emails go to the Project Manager and CFO — giving a 2–3 week intervention window." },
-            { what: "30+ Project Portfolio Dashboard in Zoho Analytics", detail: "Deployed a live portfolio dashboard showing phase-wise budget vs actuals, cost-to-complete projections, overrun flags, multi-currency rollup in AED/USD, and subcontractor payment status — across all live projects on one screen." },
+            "Restructured Zoho Books to tag every cost and invoice to a specific project and phase at entry using custom fields",
+            "Designed a standardised budget upload template for Project Managers with an automated import flow into Zoho Analytics",
+            "Built SQL-driven retention calculations and subcontractor milestone payment schedules for every active contract",
+            "Configured early-warning alerts that fire when a phase crosses 85% of budget before 80% physical completion",
+            "Deployed a live 30+ project portfolio dashboard with phase-wise budget vs actuals, overrun flags, and multi-currency rollup"
           ],
           results: [
             { val: "Same Week", lbl: "Overrun Detection" },
@@ -968,11 +951,11 @@
             "Every Closed-Won deal needed an invoice in Books within 48 hours — nobody was checking",
           ],
           implementation: [
-            { what: "Zoho CRM + Zoho Books SQL Join in Zoho Analytics", detail: "Set up a multi-source workspace in Zoho Analytics pulling Zoho CRM (Deals, Contacts, Accounts) and Zoho Books (Invoices, Payments, Credit Notes) and joined them on a shared customer identifier. Sales and Finance now see the same data — live." },
-            { what: "Revenue Bridge Table — Deal to Cash in One View", detail: "Built a unified SQL query table in Zoho Analytics showing every deal's complete journey: CRM stage → invoice date → amount → payment received → collection lag in days. Any Closed-Won deal without a linked invoice is flagged automatically." },
-            { what: "Slab-Wise Commission Engine with Quota Overrides", detail: "Implemented a commission engine in Zoho Analytics SQL covering deal-type slabs, quota attainment multipliers, and override conditions for renewals vs new business. Commissions are now generated automatically at month-end — reviewed, not built." },
-            { what: "Live MRR, Churn & Expansion Revenue Dashboard", detail: "Configured Zoho Analytics dashboards tracking Monthly Recurring Revenue, churn (from CRM stage history), and expansion revenue (upsells and renewals) — all live, all sourced from the same CRM + Books integration." },
-            { what: "48-Hour Invoice Alert via Zoho Analytics Automation", detail: "Configured a daily automated alert identifying every Closed-Won CRM deal without a corresponding Zoho Books invoice after 48 hours. The Finance Head and Account Manager get the flag by 9 AM the next morning — revenue leakage caught before it compounds." },
+            "Set up a multi-source Zoho Analytics workspace joining Zoho CRM deals and Zoho Books invoices on a shared customer identifier",
+            "Built a Revenue Bridge table showing every deal's full journey from CRM stage to cash received with collection lag in days",
+            "Implemented a slab-wise commission engine covering deal-type slabs, quota multipliers, and override conditions for renewals vs new business",
+            "Configured live MRR, churn, and expansion revenue dashboards sourced directly from the CRM and Books integration",
+            "Set up a 48-hour alert flagging every Closed-Won deal without a linked Zoho Books invoice — revenue leakage caught automatically"
           ],
           results: [
             { val: "3 Days→20min", lbl: "Recon Time" },
@@ -1007,11 +990,11 @@
             "Alerts needed to fire 3 weeks in advance — not after the cash gap appeared",
           ],
           implementation: [
-            { what: "8-Bank Feed Integration via Zoho Books", detail: "Activated and configured Zoho Books bank feeds for all 8 accounts across 3 banks. Every account now syncs each morning, feeding a unified daily cash balance view in Zoho Analytics — no manual downloads, no reconciliation lag." },
-            { what: "Receivables Probability Model — 90/60/30 Weighting", detail: "Built a customer-level collection probability engine in Zoho Analytics using 24 months of Zoho Books payment history. Receivables are probability-weighted (90% reliable payers, 60% average, 30% slow) — giving treasury a realistic inflow forecast, not an optimistic one." },
-            { what: "13-Week Payment Calendar in Zoho Analytics SQL", detail: "Mapped all recurring outflows into a structured weekly calendar — vendor payments, loan EMIs, GST/TDS/PF dues, payroll, intercompany transfers. Maintained in Zoho Analytics and updates automatically as new obligations are added in Zoho Books." },
-            { what: "FD Maturity, LC Expiry & Working Capital Tracker", detail: "Built a liability and liquidity module in Zoho Analytics tracking Fixed Deposit maturities, bank guarantee renewals, LC expiry dates, and working capital utilisation — all on the same 13-week timeline as inflows and outflows." },
-            { what: "Entity-Wise Cash Threshold Alerts — 3-Week Lead Time", detail: "Configured Zoho Analytics automated alerts for each of the 5 business entities. When projected cash balance is forecast to breach the minimum threshold within 3 weeks, an alert fires to the CFO and treasury team — while there is still time to act." },
+            "Activated Zoho Books bank feeds for all 8 accounts across 3 banks feeding a unified daily cash balance view in Zoho Analytics",
+            "Built a customer-level collection probability engine using 24 months of payment history to weight receivables at 90/60/30%",
+            "Mapped all recurring outflows — EMIs, GST, TDS, payroll, intercompany — into a structured 13-week weekly payment calendar",
+            "Built an FD maturity, LC expiry, and working capital utilisation tracker on the same 13-week timeline",
+            "Configured entity-wise automated alerts that fire 3 weeks before projected cash balance breaches the minimum threshold"
           ],
           results: [
             { val: "13-Week", lbl: "Live Forecast" },
@@ -1046,11 +1029,11 @@
             "Stock imbalanced across outlets — some had too much of what others needed",
           ],
           implementation: [
-            { what: "Zoho Inventory + POS → Zoho Analytics Daily Sync", detail: "Configured automated daily sync from Zoho Inventory and POS systems into Zoho Analytics with outlet-level tagging across all 25 stores. Stock, sales, returns, and markdowns in one place — updated every morning." },
-            { what: "ABC-XYZ SKU Classification Model", detail: "Built combined ABC analysis (revenue contribution) and XYZ analysis (demand variability) in Zoho Analytics, generating 9 buying strategy buckets per SKU per outlet. Each bucket carries a specific reorder, hold, or clearance recommendation." },
-            { what: "Days-of-Stock-Remaining Alert Engine", detail: "Implemented daily stock coverage calculation per SKU per outlet. Items below reorder point flagged for replenishment. Items above 90-day cover flagged for markdown or inter-outlet transfer. Buying team receives a prioritised action list every morning." },
-            { what: "True Gross Margin Dashboard — After All Deductions", detail: "Computed outlet-wise and category-wise gross margin in Zoho Analytics after markdowns, returns, and shrinkage. Revealed which outlets and categories were genuinely profitable vs being cross-subsidised — a conversation that had never been possible before." },
-            { what: "Inter-Outlet Transfer Recommendation Engine", detail: "Built daily inter-outlet balancing logic in Zoho Analytics matching overstocked SKUs in one outlet against understocked SKUs in nearby outlets, generating transfer suggestions — reducing fresh purchase orders and cutting carrying cost simultaneously." },
+            "Configured automated daily sync from Zoho Inventory and POS across all 25 outlets into Zoho Analytics",
+            "Built a combined ABC-XYZ SKU classification model generating 9 buying strategy buckets per SKU per outlet",
+            "Implemented a days-of-stock-remaining alert engine sending the buying team a prioritised action list every morning",
+            "Computed outlet-wise and category-wise true gross margin after markdowns, returns, and shrinkage",
+            "Built daily inter-outlet transfer recommendations matching overstocked SKUs against understocked ones at nearby outlets"
           ],
           results: [
             { val: "30%", lbl: "Stockouts Down" },
@@ -1085,11 +1068,11 @@
             "6 export formats each matching RBI's exact prescribed Excel templates — no manual reformatting",
           ],
           implementation: [
-            { what: "Unified Loan Master Table in Zoho Analytics", detail: "Consolidated disbursement records, repayment schedules, overdue tracking, and restructuring flags from all 3 source systems into a single governed loan master in Zoho Analytics. One source of truth for all 6 RBI returns — updated automatically each month." },
-            { what: "RBI-Compliant NPA Classification Engine (SQL)", detail: "Built a fully automated NPA classification module in Zoho Analytics SQL. Every loan account is assessed daily against Days Past Due thresholds and restructuring flags to assign SMA-0, SMA-1, SMA-2, or NPA status — per RBI Master Directions, no human interpretation." },
-            { what: "Provisioning Calculator — Standard to Loss Categories", detail: "Implemented RBI-norm provisioning logic across all 5 asset categories (Standard, Sub-Standard, Doubtful D1/D2/D3, Loss) with automated write-off netting. Provision amounts update the moment asset classification changes." },
-            { what: "ALM Maturity Ladder & CAR Module in Zoho Analytics", detail: "Built ALM maturity bucket classification (overnight, 2–7 days, 8–14 days, etc.) for both assets and liabilities, and a CAR computation module breaking down Tier 1 and Tier 2 capital — both fully SQL-driven in Zoho Analytics." },
-            { what: "One-Click Export — 6 RBI Returns in Prescribed Format", detail: "Configured a one-click export workflow in Zoho Analytics generating all 6 RBI-mandated returns (NPA Report, Provisioning Schedule, Sector Exposure, CAR Return, ALM Statement, Off-Balance Sheet Exposure) in exact RBI-prescribed Excel formats — ready for portal upload." },
+            "Consolidated loan data from 3 source systems into a single governed loan master in Zoho Analytics updated automatically each month",
+            "Built a fully automated NPA classification engine assigning SMA-0, SMA-1, SMA-2, or NPA status per RBI Master Directions in SQL",
+            "Implemented RBI-norm provisioning logic across all 5 asset categories with automated write-off netting",
+            "Built ALM maturity bucket classification and a CAR computation module — both fully SQL-driven in Zoho Analytics",
+            "Configured a one-click export generating all 6 RBI-mandated returns in exact prescribed Excel formats, ready for portal upload"
           ],
           results: [
             { val: "Same Day", lbl: "All 6 Returns" },
@@ -1124,11 +1107,11 @@
             "Escalation emails to Finance Head and RMs were manual — therefore inconsistent",
           ],
           implementation: [
-            { what: "Live AR Aging Dashboard in Zoho Analytics — Daily Refresh", detail: "Built a real-time accounts receivable aging dashboard connected directly to Zoho Books. Dynamic buckets (0–30, 31–60, 61–90, 91–180, 180+ days) recalculate automatically every morning. Collectors see exactly who owes what — live, not stale." },
-            { what: "Collector Portfolio Assignment & Performance Dashboards", detail: "Created a collector master in Zoho Analytics linking each customer to a named collector. Every collector gets a personalised dashboard showing portfolio aging, total overdue, recovery rate, and open PTP commitments — accountability made visible." },
-            { what: "Promise-to-Pay & Dispute Tracking Module", detail: "Introduced structured PTP date capture and dispute classification fields linked to Zoho Books invoice records. Replaced the WhatsApp-and-memory culture with a logged, trackable process. Management can see every outstanding commitment and unresolved dispute in one view." },
-            { what: "Automated Escalation Alerts at 60-Day Threshold", detail: "Configured Zoho Analytics to automatically send escalation emails to the Relationship Manager and Finance Head when any invoice crosses 60 days without a valid PTP date. Alert fires at 7 AM. The system escalates — not a person." },
-            { what: "Credit Utilisation Monitor & Pre-Order Breach Alerts", detail: "Built daily credit utilisation reports in Zoho Analytics from Zoho Books data. When a customer's overdue balance breaches their credit threshold, an alert fires before new orders are processed — making credit control a live operation, not a monthly review." },
+            "Built a real-time AR aging dashboard connected directly to Zoho Books with dynamic buckets recalculating every morning",
+            "Created a collector portfolio assignment system with personalised dashboards showing aging, overdue, recovery rate, and open commitments",
+            "Introduced structured promise-to-pay date capture and dispute classification linked to Zoho Books invoice records",
+            "Configured automated escalation emails at 7 AM when any invoice crosses 60 days without a valid PTP date",
+            "Built daily credit utilisation alerts from Zoho Books to flag customers before new orders are processed on overdue accounts"
           ],
           results: [
             { val: "75→49", lbl: "DSO Reduced" },
@@ -1163,11 +1146,11 @@
             "Some transactions involved cross-border settlements in multiple currencies",
           ],
           implementation: [
-            { what: "Marketplace API Connectors → Zoho Analytics Daily Feed", detail: "Built automated API connectors for Amazon (Seller Central API), Flipkart (Settlement API), and Meesho pulling daily normalised transaction data into a unified staging table in Zoho Analytics. Manual downloads eliminated from Day 1." },
-            { what: "Normalised Settlement Schema — One Model for All 3 Platforms", detail: "Designed a master settlement schema in Zoho Analytics mapping Amazon, Flipkart, and Meesho's different data structures into a single consistent transaction model. Platform commission rates, return categories, and shipping fields standardised regardless of source." },
-            { what: "SKU-Level Net Revenue Calculation Engine", detail: "Built transaction-level revenue calculation in Zoho Analytics: Selling Price minus Platform Commission minus Return Deductions minus Shipping Charges — for every order, across every platform. Actual net revenue per SKU, per day." },
-            { what: "Ad Spend Attribution from Marketplace Ad APIs", detail: "Pulled Sponsored Product and Display Ad data from Amazon Advertising API and Flipkart Ads into Zoho Analytics. Spend attributed to individual ASINs and SKUs using campaign-to-product-ID mapping — enabling true 'profitable after ads' margin per SKU." },
-            { what: "Zoho Inventory COGS → True Net Margin Per SKU", detail: "Linked Zoho Inventory's weighted average cost to every settlement line item in Zoho Analytics. Result: a live net margin per SKU per platform after revenue, commissions, returns, ads, and COGS — the number that tells you whether to keep selling a product." },
+            "Built automated API connectors for Amazon, Flipkart, and Meesho pulling daily normalised transaction data into Zoho Analytics",
+            "Designed a master settlement schema mapping all three platforms' different data structures into one consistent transaction model",
+            "Built transaction-level net revenue calculations per SKU covering commissions, return deductions, and shipping charges",
+            "Pulled ad spend from Amazon Advertising API and Flipkart Ads and attributed it to individual SKUs for true post-ad margin",
+            "Linked Zoho Inventory weighted average cost to every settlement line to compute live net margin per SKU per platform"
           ],
           results: [
             { val: "4 Days→Auto", lbl: "Reconciliation" },
@@ -1202,11 +1185,11 @@
             "Pharmacy dispensing without billing entries — a leak running undetected for years",
           ],
           implementation: [
-            { what: "HIS-to-Zoho Analytics ETL Pipeline — Daily Automated Sync", detail: "Built custom API connectors and ETL scripts to extract patient visit records, clinical service logs, and billing entries from the hospital HIS and load them into Zoho Analytics every day — across all 3 hospitals, automatically." },
-            { what: "Unbilled Services Detection Engine — 24-Hour Flag", detail: "Implemented a daily SQL comparison in Zoho Analytics between clinical service logs (what was ordered/done) and billing entries (what was charged). Any service rendered but not billed within 24 hours is automatically flagged and routed to the billing supervisor — same-day correction." },
-            { what: "TPA Claims Lifecycle Tracker — End-to-End Visibility", detail: "Built a full TPA claim management dashboard in Zoho Analytics tracking every claim from submission through pending, approved, rejected, and appealed stages. Aging buckets (0–30, 31–60, 61–90, 90+ days) update daily and drive follow-up prioritisation." },
-            { what: "Department & Doctor Revenue Dashboards", detail: "Deployed doctor-wise and department-wise dashboards in Zoho Analytics showing gross billings, billing efficiency ratio, collection lag, TPA vs self-pay mix, and month-over-month trend — giving each department head ownership of their performance." },
-            { what: "Pharmacy Dispensing vs Billing Reconciliation — Nightly", detail: "Engineered a nightly dispensing-vs-billing reconciliation in Zoho Analytics comparing pharmacy records against billing entries. Items dispensed without a bill surfaced in a prioritised exception report by 8 AM every morning." },
+            "Built custom API connectors and ETL scripts to extract patient records, clinical logs, and billing data from the hospital HIS daily across all 3 hospitals",
+            "Implemented a daily SQL comparison between clinical service logs and billing entries flagging any unbilled service within 24 hours",
+            "Built a full TPA claim management dashboard tracking every claim through its lifecycle with daily-updated aging buckets",
+            "Deployed doctor-wise and department-wise revenue dashboards showing billings, collection lag, and TPA vs self-pay mix",
+            "Engineered a nightly dispensing-vs-billing reconciliation surfacing pharmacy items dispensed without a bill by 8 AM each morning"
           ],
           results: [
             { val: "20%", lbl: "Leakage Recovered" },
@@ -1241,11 +1224,11 @@
             "Procurement team had zero visibility into vendor GST compliance before placing orders",
           ],
           implementation: [
-            { what: "GSTR-2A/2B Auto-Ingestion via GST Portal API", detail: "Configured automated monthly pull from the GST Portal API directly into a Zoho Analytics staging table. GSTR-2A (dynamic) and 2B (static) data arrives automatically on schedule — no one downloads a file or pastes data into a spreadsheet again." },
-            { what: "3-Tier SQL Match Engine in Zoho Analytics", detail: "Built a matching engine in Zoho Analytics SQL running three escalating passes: Tier 1 — exact GSTIN + invoice number + amount; Tier 2 — GSTIN + amount within ±1% tolerance (catches rounding); Tier 3 — fuzzy GSTIN + date window (catches formatting variations). Combined: 98% auto-resolution." },
-            { what: "Mismatch Classification with System-Recommended Action", detail: "Every unmatched invoice is automatically classified in Zoho Analytics: Vendor Not Filed, GSTIN Mismatch, Amount Variance, or Period Lag — each with a recommended corrective action. The team acts, not investigates." },
-            { what: "Monthly Vendor GST Compliance Scorecard", detail: "Built automated vendor compliance scoring in Zoho Analytics (0–100) based on GSTR-1 filing regularity and invoice match rate over rolling 6 months. Scores shared monthly with procurement — making GST compliance a vendor selection criterion." },
-            { what: "ITC Eligibility Dashboard — Claim, Hold, or Skip", detail: "Deployed an ITC eligibility tracker in Zoho Analytics categorising every rupee of input tax credit: Claim Now (matched, file-ready), Claim Conditionally (provisional), or Ineligible (vendor not filed / mismatch). Zero missed ITC. Zero over-claims." },
+            "Configured automated monthly pull from the GST Portal API directly into a Zoho Analytics staging table — no file downloads",
+            "Built a 3-tier SQL match engine running exact, tolerance-based, and fuzzy matching passes to achieve 98% auto-resolution",
+            "Classified every unmatched invoice automatically with a recommended corrective action — vendor not filed, GSTIN mismatch, amount variance, or period lag",
+            "Built automated vendor GST compliance scoring (0–100) based on filing regularity and invoice match rate over rolling 6 months",
+            "Deployed an ITC eligibility tracker categorising every rupee of input tax credit as Claim Now, Claim Conditionally, or Ineligible"
           ],
           results: [
             { val: "98%", lbl: "Match Rate" },
@@ -1280,11 +1263,11 @@
             "Elimination schedules in a format Big 4 auditors would accept — not just internally consistent",
           ],
           implementation: [
-            { what: "Automated 7-Entity COA Mapping Layer in Zoho Analytics", detail: "Designed a master group Chart of Accounts and built an automated mapping layer in Zoho Analytics. Every subsidiary's Zoho Books trial balance translates into the group structure automatically — every month, without human touch." },
-            { what: "IC Transaction Auto-Detection Across All 21 Entity Pairs", detail: "Zoho Analytics SQL logic auto-identifies intercompany transactions using entity-pair tagging, party master cross-referencing, and amount + date matching across all 7 entities. IC transactions previously found manually are now found completely." },
-            { what: "Automated Elimination Engine — Zero Manual Journals", detail: "Elimination schedules for IC receivables/payables, IC revenue/cost, intercompany dividends, and investment-equity offsets generate automatically — no manual journals, no risk of entries being missed." },
-            { what: "Minority Interest & Goodwill Computation Module", detail: "Minority interest and goodwill amortisation schedules calculated in Zoho Analytics for all partially-owned and acquisition-basis entities — with outputs directly traceable to source data for auditor review." },
-            { what: "One-Click Board Pack — P&L, Balance Sheet & Cash Flow", detail: "A single click in Zoho Analytics generates consolidated financial statements with full elimination schedules — formatted for board presentation and audit submission. 12 days of manual effort compressed to minutes." },
+            "Designed a master group Chart of Accounts with an automated mapping layer translating all 7 subsidiaries' Zoho Books trial balances monthly",
+            "Built SQL logic to auto-identify intercompany transactions across all 21 entity pairs using party master cross-referencing and amount-date matching",
+            "Generated elimination schedules for IC receivables, payables, revenue, costs, dividends, and investment-equity offsets automatically — zero manual journals",
+            "Calculated minority interest and goodwill amortisation for all partially-owned and acquisition-basis entities with full auditor traceability",
+            "Built a one-click board pack generator producing consolidated P&L, Balance Sheet, and Cash Flow with elimination schedules in minutes"
           ],
           results: [
             { val: "12→1", lbl: "Consolidation Days" },
@@ -1319,11 +1302,11 @@
             "4-week parallel-run with both systems live simultaneously without confusion or duplication",
           ],
           implementation: [
-            { what: "180-Table Field-Level SAP B1 → Zoho Books Mapping Blueprint", detail: "Prepared a complete field-level mapping document across all 180 relevant SAP B1 tables with every field mapped to its Zoho Books equivalent. Reviewed, challenged, and formally signed off before a single record was extracted." },
-            { what: "4-Phase Gated Migration with Sign-Off at Each Stage", detail: "Executed migration across 4 phases with formal sign-off gates: Phase 1 — Chart of Accounts & Masters; Phase 2 — Open Transactions; Phase 3 — Historical Closed Data; Phase 4 — Reporting & Analytics Layer. No phase began without approving the previous." },
-            { what: "Python ETL Transformation Scripts — Full Audit Trail", detail: "Wrote custom Python ETL scripts to extract, clean, transform, and load SAP B1 data into Zoho Books via API — handling data type conversions, date formats, and currency normalisations with complete logging at every step for traceability." },
-            { what: "100% Balance Verification via SQL Before Go-Live", detail: "SQL validation scripts compared SAP B1 closing balances against Zoho Books opening balances across every account. Go-live was authorised only after a 100% match confirmed — the standard the previous vendors hadn't met." },
-            { what: "5-Year Historical Data Warehouse in Zoho Analytics", detail: "Loaded all pre-migration transactions into a Zoho Analytics historical data warehouse — making 5 years of trend analysis, audit queries, and year-on-year comparisons available from the very first day in the new system." },
+            "Prepared a complete field-level mapping document across all 180 relevant SAP B1 tables before a single record was extracted",
+            "Executed a 4-phase gated migration — COA and Masters, Open Transactions, Historical Closed Data, Reporting Layer — with formal sign-off at each stage",
+            "Wrote custom Python ETL scripts to extract, transform, and load SAP B1 data into Zoho Books via API with full audit logging at every step",
+            "Ran SQL validation scripts comparing SAP B1 closing balances against Zoho Books opening balances — go-live authorised only after 100% match",
+            "Loaded all pre-migration transactions into a Zoho Analytics historical data warehouse making 5 years of history accessible from Day 1"
           ],
           results: [
             { val: "100%", lbl: "Balance Match" },
@@ -1358,11 +1341,11 @@
             "Collections across 80+ distributors had no scoring or risk ranking — all treated the same",
           ],
           implementation: [
-            { what: "DMS-to-Zoho Analytics Automated Daily Pipeline", detail: "Built an automated daily data pipeline from the brand's Distributor Management System into Zoho Analytics — pulling secondary sales, current stock, and outlet visit data for all 80+ distributors every day. Monthly phone calls became unnecessary." },
-            { what: "Primary-to-Secondary Revenue Bridge Table", detail: "Created a bridge table in Zoho Analytics comparing factory billing from Zoho Books with DMS offtake — identifying stock build-up ratios and pipeline fill levels by territory and SKU. Management sees exactly where inventory is piling up before it's a problem." },
-            { what: "Territory Performance Scorecards in Zoho Analytics", detail: "Built daily territory scorecards covering outlet coverage percentage, numeric distribution, lines per call, and beat plan adherence — benchmarked against targets and refreshed automatically each morning." },
-            { what: "Distributor Health Index (DHI) — Composite 0–100 Score", detail: "Engineered the DHI in Zoho Analytics combining collection efficiency from Zoho Books, secondary stock days from DMS, sales growth rate, and outlet coverage into one composite score per distributor. Management has a ranked view of distributor health — not just revenue." },
-            { what: "Mobile-Ready Field Dashboard for Territory Managers", detail: "Delivered a mobile-friendly Zoho Analytics dashboard for Territory Managers showing distributor health score, pending collections, outlet coverage status, and secondary sales trend — accessible before every field visit, replacing guesswork with context." },
+            "Built an automated daily data pipeline from the Distributor Management System into Zoho Analytics for all 80+ distributors",
+            "Created a primary-to-secondary revenue bridge table comparing Zoho Books factory billing with DMS offtake by territory and SKU",
+            "Built daily territory scorecards covering outlet coverage, numeric distribution, lines per call, and beat plan adherence",
+            "Engineered a Distributor Health Index (DHI) combining collection efficiency, stock days, sales growth, and outlet coverage into one composite score",
+            "Delivered a mobile-friendly Zoho Analytics dashboard for Territory Managers showing distributor health, pending collections, and secondary sales trend"
           ],
           results: [
             { val: "22%", lbl: "Collection Efficiency" },
@@ -1397,11 +1380,11 @@
             "Board pack exhibits needed to be slide-ready — not just dashboard views",
           ],
           implementation: [
-            { what: "Multi-Source ETL Pipelines for All 3 Accounting Systems", detail: "Built automated ETL pipelines for Tally (XML export), Zoho Books (native API), and QuickBooks (CSV) — all feeding into a unified financial data lake in Zoho Analytics on a scheduled basis. All 6 companies in one place, always current." },
-            { what: "Universal Financial Statement Framework", detail: "Designed a master financial statement template in Zoho Analytics. Every portfolio company's chart of accounts maps to a common P&L, Balance Sheet, and Cash Flow structure — regardless of source system, accounting convention, or reporting format." },
-            { what: "Industry-Specific KPI Layers in Zoho Analytics", detail: "Built separate KPI modules for each sector: Same-Store Sales Growth and inventory turn for retail; OEE and material cost ratio for manufacturing; utilisation rate and realisation per hour for services — benchmarked against industry targets." },
-            { what: "Automated EBITDA Bridge Analysis — Every Quarter", detail: "Engineered EBITDA bridge calculations in Zoho Analytics isolating volume, price, mix, and cost components for each portfolio company — automatically, in slide-ready data output format every quarter." },
-            { what: "One-Click Board Pack Generation in Zoho Analytics", detail: "Built a quarterly automation workflow generating all financial exhibits, KPI scorecards, and portfolio summary data in one run. What used to take 3 weeks of manual effort now takes 2 days — and nothing is missed or formatted manually." },
+            "Built automated ETL pipelines for Tally (XML), Zoho Books (API), and QuickBooks (CSV) feeding all 6 companies into one Zoho Analytics workspace",
+            "Designed a universal financial statement framework mapping every portfolio company's chart of accounts to a common P&L, Balance Sheet, and Cash Flow",
+            "Built industry-specific KPI modules for retail, manufacturing, and services — each benchmarked against sector targets",
+            "Engineered automated EBITDA bridge calculations isolating volume, price, mix, and cost drivers for each portfolio company every quarter",
+            "Built a quarterly automation workflow generating all financial exhibits and KPI scorecards — reducing 3 weeks of manual effort to 2 days"
           ],
           results: [
             { val: "3 Wks→2 Days", lbl: "Board Pack Time" },
@@ -1489,14 +1472,14 @@
 
         const implSection = `
           <div class="ms-head"><div class="ms-icon">🛠️</div><h4>What We Implemented</h4></div>
-          <div class="impl-grid">
+          <ul class="impl-bullets">
             ${cs.implementation.map((item) => `
-              <div class="impl-card">
-                <div class="impl-card-title">${item.what}</div>
-                <div class="impl-card-detail">${item.detail}</div>
-              </div>
+              <li class="impl-bullet-item">
+                <span class="impl-bullet-dot"></span>
+                <span>${item}</span>
+              </li>
             `).join("")}
-          </div>
+          </ul>
         `;
 
         return `
