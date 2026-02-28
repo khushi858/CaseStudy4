@@ -128,29 +128,6 @@
         transition: all 0.2s;
       }
       .pill:hover { background: rgba(42, 127, 114, 0.08); }
-      .stats-row {
-        display: flex;
-        justify-content: center;
-        gap: 40px;
-        flex-wrap: wrap;
-        margin-top: 32px;
-        padding-top: 32px;
-        border-top: 1px solid var(--border);
-      }
-      .stat-val {
-        font-family: "Playfair Display", serif;
-        font-size: 28px;
-        font-weight: 700;
-        color: var(--teal);
-        display: block;
-      }
-      .stat-lbl {
-        font-size: 11px;
-        color: var(--text-light);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-top: 2px;
-      }
       .controls-bar {
         max-width: 1200px;
         margin: 0 auto;
@@ -260,12 +237,15 @@
       .stripe-analytics { background: linear-gradient(90deg, #2a7f72, #3abfa8); }
       .stripe-integration { background: linear-gradient(90deg, #6b4fa0, #9b7ed0); }
       .stripe-reporting { background: linear-gradient(90deg, #2f6db5, #5b9ee0); }
+      .stripe-crm { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+      .stripe-people { background: linear-gradient(90deg, #16a085, #1abc9c); }
       .card-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 14px;
       }
+      .card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
       .card-tag {
         font-size: 10px;
         font-weight: 700;
@@ -278,12 +258,15 @@
       .tag-analytics { background: var(--teal-pale); color: var(--teal); }
       .tag-integration { background: var(--purple-pale); color: var(--purple); }
       .tag-reporting { background: var(--blue-pale); color: var(--blue); }
+      .tag-crm { background: #fdecea; color: #c0392b; }
+      .tag-people { background: #e8f8f5; color: #16a085; }
       .card-number {
         font-size: 11px;
         font-weight: 700;
         color: var(--border);
         font-family: "Playfair Display", serif;
         letter-spacing: 1px;
+        flex-shrink: 0;
       }
       .case-card h3 {
         font-family: "Playfair Display", serif;
@@ -445,6 +428,12 @@
         font-family: "DM Sans", sans-serif;
       }
       .modal-close:hover { background: rgba(255,255,255,0.28); }
+      .modal-header-tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
       .modal-header-tag {
         display: inline-block;
         background: rgba(255,255,255,0.18);
@@ -455,7 +444,6 @@
         text-transform: uppercase;
         padding: 5px 13px;
         border-radius: 6px;
-        margin-bottom: 14px;
         border: 1px solid rgba(255,255,255,0.2);
       }
       .modal-header h2 {
@@ -684,7 +672,6 @@
         .modal-body { padding: 24px 22px 26px; }
         .modal-header { padding: 28px 22px 22px; }
         .modal-nav { padding: 16px 22px; }
-        .stats-row { gap: 24px; }
         #searchInput { width: 160px; }
       }
     </style>
@@ -717,9 +704,11 @@
         <button class="ftab" data-filter="analytics">Analytics</button>
         <button class="ftab" data-filter="integration">Integration</button>
         <button class="ftab" data-filter="reporting">Reporting</button>
+        <button class="ftab" data-filter="crm">CRM</button>
+        <button class="ftab" data-filter="people">People</button>
       </div>
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-        <span class="count-label" id="countLabel">Showing 19 case studies</span>
+        <span class="count-label" id="countLabel">Showing 22 case studies</span>
         <div class="search-wrap">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -809,16 +798,19 @@
     </style>
 
     <script>
+      // TAG SYSTEM:
+      // Each case has a `tags` array (multi-value) for filtering.
+      // The `primaryTag` / `tagClass` / `stripe` control the VISUAL appearance of the card (first/main tag).
+      // A card shows under ALL filters matching any of its tags.
+
       const cases = [
         {
           id: 1,
-          tag: "Finance",
-          tagClass: "tag-finance",
-          stripe: "stripe-finance",
+          tags: ["finance"],
+          primaryTag: "Finance", tagClass: "tag-finance", stripe: "stripe-finance",
           title: "Multi-Currency Fund Consolidation in USD",
           summary: "A Technology Group operating across India and the USA required real-time USD visibility of bank balances and fixed deposits across multiple entities. We delivered a fully automated consolidation dashboard replacing fragmented Excel-based reporting.",
-          client: "Technology Group",
-          industry: "Region · India & USA",
+          client: "Technology Group", industry: "Region · India & USA",
           metrics: [
             { val: "100%", lbl: "Excel Eliminated" },
             { val: "Same-day", lbl: "Visibility" },
@@ -850,13 +842,11 @@
         },
         {
           id: 2,
-          tag: "Analytics",
-          tagClass: "tag-analytics",
-          stripe: "stripe-analytics",
+          tags: ["analytics", "finance"],
+          primaryTag: "Analytics", tagClass: "tag-analytics", stripe: "stripe-analytics",
           title: "Automated MIS Replacing 40 Excel Sheets",
           summary: "Every month-end, a Dubai trading firm's finance team disappeared into spreadsheets for 5 full working days. Leadership was flying blind for the first week of every month. We replaced all 40 Excel sheets with a fully automated MIS built on Zoho — reports now land in every inbox at 8 AM every Monday, untouched by human hands.",
-          client: "Trading Company",
-          industry: "Region · Dubai, UAE",
+          client: "Trading Company", industry: "Region · Dubai, UAE",
           metrics: [
             { val: "40+", lbl: "Sheets Replaced" },
             { val: "5 Days", lbl: "Saved Monthly" },
@@ -889,13 +879,11 @@
         },
         {
           id: 3,
-          tag: "Reporting",
-          tagClass: "tag-reporting",
-          stripe: "stripe-reporting",
+          tags: ["reporting", "finance", "analytics"],
+          primaryTag: "Reporting", tagClass: "tag-reporting", stripe: "stripe-reporting",
           title: "Project-Wise P&L for a GCC Contracting Firm",
           summary: "They were running 30+ construction projects across the GCC with no idea which ones were profitable until the project was over. By then, it was too late to do anything about it. We gave them live phase-wise cost visibility and early-warning alerts on Zoho — and margin improved 4% in the first quarter.",
-          client: "Contracting Company",
-          industry: "Region · GCC",
+          client: "Contracting Company", industry: "Region · GCC",
           metrics: [
             { val: "30+", lbl: "Projects Live" },
             { val: "4%", lbl: "Margin Gained" },
@@ -928,13 +916,11 @@
         },
         {
           id: 4,
-          tag: "Integration",
-          tagClass: "tag-integration",
-          stripe: "stripe-integration",
+          tags: ["integration", "analytics", "crm", "finance"],
+          primaryTag: "Integration", tagClass: "tag-integration", stripe: "stripe-integration",
           title: "Zoho CRM to Zoho Books Revenue Bridge",
           summary: "Sales was closing deals in Zoho CRM. Finance was raising invoices in Zoho Books. The numbers never matched and nobody could explain why. Month-end reconciliation was a 3-day argument. We connected the two systems properly — and turned a 3-day fight into a 20-minute confirmation.",
-          client: "SaaS Company",
-          industry: "Region · Bengaluru, India",
+          client: "SaaS Company", industry: "Region · Bengaluru, India",
           metrics: [
             { val: "3 Days→20min", lbl: "Month-End Recon" },
             { val: "Auto", lbl: "Commission Reports" },
@@ -967,13 +953,11 @@
         },
         {
           id: 5,
-          tag: "Finance",
-          tagClass: "tag-finance",
-          stripe: "stripe-finance",
+          tags: ["finance", "analytics"],
+          primaryTag: "Finance", tagClass: "tag-finance", stripe: "stripe-finance",
           title: "13-Week Rolling Cash Flow Forecast",
           summary: "A diversified group with 8 bank accounts across 5 business units had no idea what their cash position would look like 4 weeks from now. Two near-miss liquidity crises in 6 months. We built a live 13-week rolling cash forecast on Zoho that turned panic-mode treasury into a calm, proactive operation.",
-          client: "Diversified Business Group",
-          industry: "Region · India",
+          client: "Diversified Business Group", industry: "Region · India",
           metrics: [
             { val: "13-Week", lbl: "Rolling Forecast" },
             { val: "8", lbl: "Banks Unified" },
@@ -1006,13 +990,11 @@
         },
         {
           id: 6,
-          tag: "Analytics",
-          tagClass: "tag-analytics",
-          stripe: "stripe-analytics",
+          tags: ["analytics", "integration"],
+          primaryTag: "Analytics", tagClass: "tag-analytics", stripe: "stripe-analytics",
           title: "25-Outlet Retail Chain Inventory Intelligence",
           summary: "Some stores drowning in slow-moving stock. Others constantly running out of bestsellers. Nobody knew which SKUs were actually profitable. We built an inventory intelligence layer on Zoho Inventory and Zoho Analytics that gave the buying team daily, data-driven signals — and cut carrying costs by 18%.",
-          client: "Retail Chain",
-          industry: "Region · West India",
+          client: "Retail Chain", industry: "Region · West India",
           metrics: [
             { val: "25", lbl: "Outlets Tracked" },
             { val: "30%", lbl: "Stockout Reduction" },
@@ -1045,13 +1027,11 @@
         },
         {
           id: 7,
-          tag: "Reporting",
-          tagClass: "tag-reporting",
-          stripe: "stripe-reporting",
+          tags: ["reporting", "finance", "analytics"],
+          primaryTag: "Reporting", tagClass: "tag-reporting", stripe: "stripe-reporting",
           title: "NBFC RBI Regulatory Reporting Automation",
           summary: "A compliance team spending 7 full days every month manually assembling RBI returns across NPA, ALM, and CAR formats. We automated the entire reporting pipeline on Zoho Analytics — same-day, submission-ready, zero manual formatting.",
-          client: "Non-Banking Financial Company",
-          industry: "Region · Mumbai, India",
+          client: "Non-Banking Financial Company", industry: "Region · Mumbai, India",
           metrics: [
             { val: "7→0 Days", lbl: "Manual Effort" },
             { val: "Same Day", lbl: "Report Generation" },
@@ -1084,13 +1064,11 @@
         },
         {
           id: 8,
-          tag: "Finance",
-          tagClass: "tag-finance",
-          stripe: "stripe-finance",
+          tags: ["finance", "analytics", "crm"],
+          primaryTag: "Finance", tagClass: "tag-finance", stripe: "stripe-finance",
           title: "AR Collections Cockpit — DSO Reduced 35%",
           summary: "75-day DSO. No collector accountability. Overdue invoices sitting in Zoho Books for weeks with no one chasing them. We built a live AR cockpit on Zoho that turned a reactive, undocumented collections process into a structured, accountable engine — and freed ₹1.2 Crore per month in working capital.",
-          client: "B2B IT Services Firm",
-          industry: "Region · Pune, India",
+          client: "B2B IT Services Firm", industry: "Region · Pune, India",
           metrics: [
             { val: "75→49", lbl: "DSO (Days)" },
             { val: "35%", lbl: "Faster Collections" },
@@ -1123,13 +1101,11 @@
         },
         {
           id: 9,
-          tag: "Integration",
-          tagClass: "tag-integration",
-          stripe: "stripe-integration",
+          tags: ["integration", "analytics", "finance"],
+          primaryTag: "Integration", tagClass: "tag-integration", stripe: "stripe-integration",
           title: "E-Commerce Multi-Marketplace Profitability Analytics",
           summary: "Selling on Amazon, Flipkart, and Meesho — with no idea which platform or SKU was actually making money after fees, returns, and ad spend. We integrated all three into Zoho Analytics and surfaced the truth. Two SKUs were confirmed loss-makers. They were cut. Blended margin improved 3.2%.",
-          client: "D2C Consumer Brand",
-          industry: "Region · Bengaluru, India",
+          client: "D2C Consumer Brand", industry: "Region · Bengaluru, India",
           metrics: [
             { val: "3→1", lbl: "Reports Unified" },
             { val: "SKU-Level", lbl: "Net Margin Known" },
@@ -1162,13 +1138,11 @@
         },
         {
           id: 10,
-          tag: "Analytics",
-          tagClass: "tag-analytics",
-          stripe: "stripe-analytics",
+          tags: ["analytics", "finance"],
+          primaryTag: "Analytics", tagClass: "tag-analytics", stripe: "stripe-analytics",
           title: "Hospital Revenue Cycle & TPA Claims Analytics",
           summary: "A 3-hospital chain was losing an estimated 20% of billed revenue to unbilled services, billing gaps, and slow insurance claim realisations. We built a revenue cycle dashboard on Zoho Analytics that surfaced every rupee of leakage every single day.",
-          client: "Multi-Specialty Hospital Chain",
-          industry: "Region · South India",
+          client: "Multi-Specialty Hospital Chain", industry: "Region · South India",
           metrics: [
             { val: "20%", lbl: "Revenue Recovered" },
             { val: "90→52", lbl: "TPA Claim Days" },
@@ -1201,13 +1175,11 @@
         },
         {
           id: 11,
-          tag: "Finance",
-          tagClass: "tag-finance",
-          stripe: "stripe-finance",
+          tags: ["finance", "analytics"],
+          primaryTag: "Finance", tagClass: "tag-finance", stripe: "stripe-finance",
           title: "GST Reconciliation — 3,000+ Invoices Automated",
           summary: "4 days every month. 3,000+ invoices. Manual GSTR-2A/2B matching in Excel. ITC being missed. Vendor compliance nobody was tracking. We automated the entire process inside Zoho Analytics — 98% auto-match rate, zero missed ITC, 4 days saved monthly.",
-          client: "Manufacturing Company",
-          industry: "Region · Surat, Gujarat",
+          client: "Manufacturing Company", industry: "Region · Surat, Gujarat",
           metrics: [
             { val: "3,000+", lbl: "Invoices/Month" },
             { val: "98%", lbl: "Auto-Match Rate" },
@@ -1240,13 +1212,11 @@
         },
         {
           id: 12,
-          tag: "Reporting",
-          tagClass: "tag-reporting",
-          stripe: "stripe-reporting",
+          tags: ["reporting", "finance", "analytics"],
+          primaryTag: "Reporting", tagClass: "tag-reporting", stripe: "stripe-reporting",
           title: "Group Consolidated Financial Statements — 7 Entities",
           summary: "12 days of manual consolidation every month across 7 subsidiaries — each with a different chart of accounts. Auditors flagged material errors 3 years in a row. We built a one-click consolidation engine on Zoho Analytics with automatic intercompany elimination — board-ready by Day 1. Zero audit errors for 3 consecutive years since.",
-          client: "Indian Conglomerate",
-          industry: "Region · India",
+          client: "Indian Conglomerate", industry: "Region · India",
           metrics: [
             { val: "12→1", lbl: "Days to Consolidate" },
             { val: "7", lbl: "Entities Merged" },
@@ -1279,13 +1249,11 @@
         },
         {
           id: 13,
-          tag: "Integration",
-          tagClass: "tag-integration",
-          stripe: "stripe-integration",
+          tags: ["integration", "finance", "analytics"],
+          primaryTag: "Integration", tagClass: "tag-integration", stripe: "stripe-integration",
           title: "SAP B1 to Zoho Ecosystem Migration — Zero Data Loss",
           summary: "18 Lakh in annual SAP licensing. 5 years of financial history they were afraid to lose. Two failed migration attempts by other vendors. We executed a fully validated 4-phase migration to Zoho Books in 8 weeks — 100% balance match, zero post-go-live errors, all history in Zoho Analytics from Day 1.",
-          client: "Manufacturing SME",
-          industry: "Region · Rajasthan, India",
+          client: "Manufacturing SME", industry: "Region · Rajasthan, India",
           metrics: [
             { val: "18L Saved", lbl: "Annual Savings" },
             { val: "5 Years", lbl: "History Preserved" },
@@ -1318,13 +1286,11 @@
         },
         {
           id: 14,
-          tag: "Analytics",
-          tagClass: "tag-analytics",
-          stripe: "stripe-analytics",
+          tags: ["analytics", "crm", "finance"],
+          primaryTag: "Analytics", tagClass: "tag-analytics", stripe: "stripe-analytics",
           title: "Distributor Network Analytics for an FMCG Brand",
           summary: "80+ distributors. Monthly phone calls for updates. Decisions worth crores made on 30-day-old data. We connected the brand's DMS to Zoho Books and Zoho Analytics to deliver real-time secondary sales, distributor health scores, and field-ready mobile dashboards — collection efficiency improved 22% in two quarters.",
-          client: "Regional FMCG Brand",
-          industry: "Region · Maharashtra, India",
+          client: "Regional FMCG Brand", industry: "Region · Maharashtra, India",
           metrics: [
             { val: "80+", lbl: "Distributors Tracked" },
             { val: "22%", lbl: "Collection Efficiency" },
@@ -1357,13 +1323,11 @@
         },
         {
           id: 15,
-          tag: "Reporting",
-          tagClass: "tag-reporting",
-          stripe: "stripe-reporting",
+          tags: ["reporting", "analytics", "finance"],
+          primaryTag: "Reporting", tagClass: "tag-reporting", stripe: "stripe-reporting",
           title: "Portfolio Analytics for a Private Equity Fund",
           summary: "6 portfolio companies. 3 different accounting systems. Quarterly board packs taking 3 weeks, missing deadlines, damaging LP relationships. We unified everything into Zoho Analytics and cut pack preparation to 2 days — supporting two successful Series B fundraising rounds in the process.",
-          client: "Private Equity Fund",
-          industry: "Region · Mumbai, India",
+          client: "Private Equity Fund", industry: "Region · Mumbai, India",
           metrics: [
             { val: "3 Weeks→2 Days", lbl: "Board Pack Time" },
             { val: "6", lbl: "Companies Unified" },
@@ -1396,13 +1360,11 @@
         },
         {
           id: 16,
-          tag: "Finance",
-          tagClass: "tag-finance",
-          stripe: "stripe-finance",
+          tags: ["finance", "people"],
+          primaryTag: "Finance", tagClass: "tag-finance", stripe: "stripe-finance",
           title: "HR & Payroll Automation for a Staffing Solutions Company",
           summary: "A staffing company managing 50+ employees was handling onboarding, attendance, leave, and payroll entirely by hand. Frequent new joiners, shift-based work, and varied salary structures made manual processes unsustainable. We implemented Zoho People and Zoho Payroll end-to-end — turning a chaotic HR operation into a scalable, automated system.",
-          client: "Staffing Solutions Company",
-          industry: "Region · India",
+          client: "Staffing Solutions Company", industry: "Region · India",
           metrics: [
             { val: "50+", lbl: "Employees Managed" },
             { val: "Zero", lbl: "Manual Pay Runs" },
@@ -1436,13 +1398,11 @@
         },
         {
           id: 17,
-          tag: "Finance",
-          tagClass: "tag-finance",
-          stripe: "stripe-finance",
+          tags: ["finance"],
+          primaryTag: "Finance", tagClass: "tag-finance", stripe: "stripe-finance",
           title: "Automated Deferred Revenue & Expense Recognition",
           summary: "A service company running event-based projects was manually passing journal entries every month to defer and recognize revenue and expenses across accounting periods. Risk of errors, missed entries, and audit complications were mounting. We built a fully automated deferral and recognition engine inside Zoho Books — 100% of manual monthly entries eliminated.",
-          client: "Event-Based Services Company",
-          industry: "Region · India",
+          client: "Event-Based Services Company", industry: "Region · India",
           metrics: [
             { val: "100%", lbl: "Manual Entries Removed" },
             { val: "30-40%", lbl: "Faster Month-End" },
@@ -1474,13 +1434,11 @@
         },
         {
           id: 18,
-          tag: "Analytics",
-          tagClass: "tag-analytics",
-          stripe: "stripe-analytics",
+          tags: ["analytics", "finance", "integration"],
+          primaryTag: "Analytics", tagClass: "tag-analytics", stripe: "stripe-analytics",
           title: "From MYOB to Structured Project Profitability",
           summary: "An Australian retail and installation business was running on MYOB with no project-level costing, no margin visibility, and no system to catch unassigned transactions. We migrated them to Zoho Books and built a live project profitability layer on Zoho Analytics — every job's margin visible in real time, every transaction accounted for.",
-          client: "Retail & Installation Business",
-          industry: "Region · Australia",
+          client: "Retail & Installation Business", industry: "Region · Australia",
           metrics: [
             { val: "100%", lbl: "Project-Level Costing" },
             { val: "Real-Time", lbl: "Margin Visibility" },
@@ -1512,13 +1470,11 @@
         },
         {
           id: 19,
-          tag: "Integration",
-          tagClass: "tag-integration",
-          stripe: "stripe-integration",
+          tags: ["integration", "finance"],
+          primaryTag: "Integration", tagClass: "tag-integration", stripe: "stripe-integration",
           title: "E-Commerce & Inventory Control for a Fine Art Supplier",
           summary: "A premium Australian art materials supplier was managing Shopify orders and warehouse stock manually — with no live sync between online sales and backend inventory. Overselling risk, stock discrepancies, and inconsistent fulfillment were growing problems. We integrated Shopify with Zoho Inventory end-to-end and built structured SOPs for multi-branch operations.",
-          client: "Fine Art Materials & Services Provider",
-          industry: "Region · Australia",
+          client: "Fine Art Materials & Services Provider", industry: "Region · Australia",
           metrics: [
             { val: "100%", lbl: "Order Sync Automated" },
             { val: "Real-Time", lbl: "Stock Visibility" },
@@ -1549,55 +1505,145 @@
           impact: "The organization moved from reactive inventory handling to structured operational control. Management gained accurate live inventory visibility, seamless integration between online sales and the warehouse, and reduced fulfillment errors across branches. Zoho Inventory became the centralized stock management engine supporting both retail and specialist art service operations — and every branch now runs on the same process.",
         },
         {
-  id: 20,
-  tag: "Finance",
-  tagClass: "tag-finance",
-  stripe: "stripe-finance",
-  title: "Multi-Currency Fund Consolidation in USD",
-  summary: "A Technology Group operating across India and the USA required real-time USD visibility of bank balances and fixed deposits across multiple entities. We delivered a fully automated consolidation dashboard replacing fragmented Excel-based reporting.",
-  client: "Technology Group",
-  industry: "Region · India & USA",
-  metrics: [
-    { val: "100%", lbl: "Excel Eliminated" },
-    { val: "Same-day", lbl: "Visibility" },
-    { val: "60+", lbl: "Hours Saved" },
-  ],
-  tools: ["Zoho Books", "Zoho Analytics", "SQL", "Custom Forex Logic"],
-  problem: "The group operated entities in India (INR) and the USA (USD), maintaining funds across multiple bank accounts and fixed deposits. Management required a single consolidated USD view reflecting the current global liquidity position. However, fund tracking was managed through unstructured Excel sheets, with manual currency conversions and inconsistent rate usage. There was no reliable real-time visibility into total group funds.",
-  challenges: [
-    "Consolidating INR and USD entities into one unified USD view",
-    "Converting all bank and FD balances using the latest available forex rate",
-    "Structuring scattered Excel-based fund data",
-    "Ensuring consistency and audit reliability in currency calculations",
-    "Delivering real-time consolidated reporting",
-  ],
-  implementation: [
-    "Data Unification — Integrated India and USA Zoho Books organizations into a centralized Zoho Analytics workspace",
-    "Live Forex Rate Framework — Established a controlled currency layer converting all INR balances into USD using the latest available exchange rate",
-    "Liquidity Structuring Model — Standardized bank accounts and fixed deposits into a unified liquidity reporting framework",
-    "Executive USD Dashboard — Delivered a real-time consolidated fund position dashboard with automated refresh and drill-down capability",
-  ],
-  results: [
-    { val: "100%", lbl: "Excel Eliminated" },
-    { val: "4–5 Days → 0", lbl: "Reporting Cycle" },
-    { val: "60+", lbl: "Finance Hours Saved" },
-    { val: "Live", lbl: "USD Liquidity View" },
-  ],
-  impact: "Leadership now reviews the group's true current liquidity position in USD at any time — without waiting for manual currency conversions. What was previously a spreadsheet-driven process is now a live executive treasury dashboard supporting faster cash planning and strategic decisions.",
-},
+          id: 20,
+          tags: ["finance", "analytics"],
+          primaryTag: "Finance", tagClass: "tag-finance", stripe: "stripe-finance",
+          title: "Multi-Currency Fund Consolidation in USD",
+          summary: "A Technology Group operating across India and the USA required real-time USD visibility of bank balances and fixed deposits across multiple entities. We delivered a fully automated consolidation dashboard replacing fragmented Excel-based reporting.",
+          client: "Technology Group", industry: "Region · India & USA",
+          metrics: [
+            { val: "100%", lbl: "Excel Eliminated" },
+            { val: "Same-day", lbl: "Visibility" },
+            { val: "60+", lbl: "Hours Saved" },
+          ],
+          tools: ["Zoho Books", "Zoho Analytics", "SQL", "Custom Forex Logic"],
+          problem: "The group operated entities in India (INR) and the USA (USD), maintaining funds across multiple bank accounts and fixed deposits. Management required a single consolidated USD view reflecting the current global liquidity position. However, fund tracking was managed through unstructured Excel sheets, with manual currency conversions and inconsistent rate usage. There was no reliable real-time visibility into total group funds.",
+          challenges: [
+            "Consolidating INR and USD entities into one unified USD view",
+            "Converting all bank and FD balances using the latest available forex rate",
+            "Structuring scattered Excel-based fund data",
+            "Ensuring consistency and audit reliability in currency calculations",
+            "Delivering real-time consolidated reporting",
+          ],
+          implementation: [
+            "Data Unification — Integrated India and USA Zoho Books organizations into a centralized Zoho Analytics workspace",
+            "Live Forex Rate Framework — Established a controlled currency layer converting all INR balances into USD using the latest available exchange rate",
+            "Liquidity Structuring Model — Standardized bank accounts and fixed deposits into a unified liquidity reporting framework",
+            "Executive USD Dashboard — Delivered a real-time consolidated fund position dashboard with automated refresh and drill-down capability",
+          ],
+          results: [
+            { val: "100%", lbl: "Excel Eliminated" },
+            { val: "4–5 Days → 0", lbl: "Reporting Cycle" },
+            { val: "60+", lbl: "Finance Hours Saved" },
+            { val: "Live", lbl: "USD Liquidity View" },
+          ],
+          impact: "Leadership now reviews the group's true current liquidity position in USD at any time — without waiting for manual currency conversions. What was previously a spreadsheet-driven process is now a live executive treasury dashboard supporting faster cash planning and strategic decisions.",
+        },
+        {
+          id: 21,
+          tags: ["analytics", "crm"],
+          primaryTag: "Analytics", tagClass: "tag-analytics", stripe: "stripe-analytics",
+          title: "Customer Retention & Year-Wise Behavioral Segmentation",
+          summary: "A UAE Retail Group had years of customer data inside Zoho CRM but no visibility into lifecycle behavior — who was new, retained, inactive, or reactivating. We engineered a 15-year retention intelligence dashboard that turned static CRM data into actionable year-wise segmentation, surfacing 13,000+ dormant customers.",
+          client: "UAE Retail Group", industry: "Region · UAE",
+          metrics: [
+            { val: "15 Years", lbl: "History Structured" },
+            { val: "13,000+", lbl: "Dormant Identified" },
+            { val: "6 Segments", lbl: "Per Year" },
+          ],
+          tools: ["Zoho CRM", "Zoho Analytics", "SQL-Based Segmentation Logic"],
+          problem: "The business had years of customer data inside Zoho CRM but lacked structured visibility into customer lifecycle behavior. Management could see total customers — but not how many were truly new, how many were retained year-over-year, who became inactive, who reactivated after dormancy, or how churn was evolving over time. There was no year-wise behavioral segmentation to support retention strategy. The data to build this existed — it just needed the right classification logic applied on top.",
+          challenges: [
+            "Defining clear retention and dormancy logic consistently across multiple years of transaction history",
+            "Classifying customers annually based on transaction continuity across 6 distinct lifecycle states",
+            "Identifying reactivation patterns — distinguishing short-term inactivity (1–4 years) from long-term dormancy (4+ years)",
+            "Tracking year-wise movement between customer states to surface churn and recovery trends",
+            "Presenting complex segmentation logic in a management-friendly, filterable dashboard format",
+          ],
+          implementation: [
+            "Integrated historical invoice and transaction data from Zoho CRM into Zoho Analytics with year-wise transaction tagging across the full 15-year history",
+            "Engineered customer lifecycle classification rules segmenting customers annually as: New, Retained, Reactivated, Dormant Reactivation, Not Retained, and Dormant",
+            "Built a dynamic year-wise movement matrix showing how customers transitioned between lifecycle categories each year",
+            "Developed SQL-based segmentation logic to compute each customer's state per year based on their complete transaction timeline",
+            "Delivered an interactive retention intelligence dashboard with filtering by year, branch, and customer segment"
+          ],
+          results: [
+            { val: "15 Years", lbl: "Behavior Structured" },
+            { val: "13,000+", lbl: "Dormant Customers" },
+            { val: "Year-Wise", lbl: "Retention Visibility" },
+            { val: "Branch-Level", lbl: "Segmentation" },
+          ],
+          impact: "Management moved from total customer count reporting to actionable retention intelligence. The dashboard now enables measurement of true annual retention rates, identification of revenue leakage from churn, strategic targeting of dormant customers by inactivity period, and branch-level customer performance evaluation. What was previously static CRM data is now a dynamic customer lifecycle intelligence system.",
+        },
+        {
+          id: 22,
+          tags: ["integration", "finance"],
+          primaryTag: "Integration", tagClass: "tag-integration", stripe: "stripe-integration",
+          title: "Digital Transformation for a Steel Trading & Job Work Company",
+          summary: "A steel trading and job work company was managing accounting, inventory, and bank reconciliation entirely by hand. Manual errors, zero stock visibility, and no profit clarity were holding the business back. We implemented Zoho Books and Zoho Inventory end-to-end — delivering a fully structured digital accounting and inventory backbone.",
+          client: "Steel Trading Company", industry: "Region · West Bengal, India",
+          metrics: [
+            { val: "100%", lbl: "Manual → Digital" },
+            { val: "Real-Time", lbl: "Inventory Visibility" },
+            { val: "Auto", lbl: "Bank Reconciliation" },
+          ],
+          tools: ["Zoho Books", "Zoho Inventory", "Bank Feed Integration", "Custom Templates"],
+          problem: "A steel trading and job work company was managing accounting, inventory, and bank reconciliation manually. As transaction volume increased, bookkeeping errors became frequent, inventory positions were unknown until someone physically checked, and tracking goods movement across trading and job work operations was done on paper. Bank reconciliation consumed days every month. And despite reasonable revenue, actual profit margins remained unclear. The business needed a structured digital system to manage both trading and job work operations reliably as it scaled.",
+          challenges: [
+            "Migrating from entirely manual accounting to a cloud-based structured system without disrupting ongoing operations",
+            "Configuring inventory tracking for steel materials covering both trading stock and job work inputs",
+            "Tracking inward and outward goods movement accurately across transaction types",
+            "Automating bank reconciliation to eliminate manual statement matching",
+            "Setting up professional invoice and delivery document templates aligned with industry requirements",
+            "Building a framework to monitor profitability separately for trading margins and job work income",
+          ],
+          implementation: [
+            "Implemented Zoho Books with a complete accounting structure including chart of accounts, GST configuration, customer and vendor masters, and job work accounting setup",
+            "Configured Zoho Inventory to manage stock inward and outward entries, separate tracking for trading materials and job work inputs, and real-time stock balance visibility",
+            "Integrated bank feeds to automate transaction imports and simplify reconciliation — eliminating manual matching cycles",
+            "Customized sales invoice, delivery challan, and purchase document templates ensuring professional and standardized documentation",
+            "Structured a profit tracking framework in Zoho Books to monitor purchase vs. sales margins, job work income, and overall business profitability per transaction"
+          ],
+          results: [
+            { val: "100%", lbl: "Digital Accounting" },
+            { val: "Real-Time", lbl: "Stock Visibility" },
+            { val: "Faster", lbl: "Bank Reconciliation" },
+            { val: "Clear", lbl: "Profit Per Job" },
+          ],
+          impact: "The company transitioned from manual record-keeping to a structured digital accounting and inventory system. Management now has live stock visibility, controlled goods movement tracking, automated bank reconciliation, and a clear understanding of trading and job work profitability. Zoho Books and Zoho Inventory now serve as the operational and financial backbone of the organization — built to scale as transaction volume grows.",
+        },
       ];
 
-      /* --- RENDER CARDS --- */
+      /* ---- TAG DISPLAY LABELS ---- */
+      const tagMeta = {
+        finance:     { label: "Finance",     cls: "tag-finance" },
+        analytics:   { label: "Analytics",   cls: "tag-analytics" },
+        integration: { label: "Integration", cls: "tag-integration" },
+        reporting:   { label: "Reporting",   cls: "tag-reporting" },
+        crm:         { label: "CRM",         cls: "tag-crm" },
+        people:      { label: "People",      cls: "tag-people" },
+      };
+
+      /* ---- RENDER CARDS ---- */
       const grid = document.getElementById("caseGrid");
       cases.forEach((cs, i) => {
         const card = document.createElement("div");
         card.className = "case-card";
-        card.dataset.tag = cs.tag.toLowerCase();
+        // store ALL tags as a space-separated data attribute for filtering
+        card.dataset.tags = cs.tags.join(" ");
         card.style.animationDelay = i * 0.045 + "s";
+
+        // build tag badges (show primary + up to 1 extra to keep it tidy)
+        const visibleTags = cs.tags.slice(0, 2);
+        const tagBadges = visibleTags.map(t => {
+          const m = tagMeta[t] || { label: t, cls: "" };
+          return `<span class="card-tag ${m.cls}">${m.label}</span>`;
+        }).join("");
+
         card.innerHTML = `
           <div class="card-stripe ${cs.stripe}"></div>
           <div class="card-top">
-            <span class="card-tag ${cs.tagClass}">${cs.tag}</span>
+            <div class="card-tags">${tagBadges}${cs.tags.length > 2 ? `<span class="card-tag" style="background:#f1f5f9;color:#64748b">+${cs.tags.length - 2}</span>` : ""}</div>
             <span class="card-number">${String(i + 1).padStart(2, "0")}</span>
           </div>
           <h3>${cs.title}</h3>
@@ -1618,23 +1664,31 @@
         grid.appendChild(card);
       });
 
-      /* --- FILTER & SEARCH --- */
+      /* ---- FILTER & SEARCH ---- */
       let activeFilter = "all", activeSearch = "";
+
+      function matchesFilter(card) {
+        if (activeFilter === "all") return true;
+        const tags = (card.dataset.tags || "").split(" ");
+        return tags.includes(activeFilter);
+      }
+
       function applyFilters() {
         const cards = grid.querySelectorAll(".case-card");
         let vis = 0;
         cards.forEach((card) => {
-          const tag = card.dataset.tag;
           const h3 = card.querySelector("h3").textContent.toLowerCase();
-          const p = card.querySelector("p").textContent.toLowerCase();
-          const fMatch = activeFilter === "all" || tag === activeFilter;
+          const p  = card.querySelector("p").textContent.toLowerCase();
+          const fMatch = matchesFilter(card);
           const sMatch = !activeSearch || h3.includes(activeSearch) || p.includes(activeSearch);
           if (fMatch && sMatch) { card.classList.remove("hidden"); vis++; }
           else card.classList.add("hidden");
         });
-        document.getElementById("countLabel").textContent = `Showing ${vis} case ${vis === 1 ? "study" : "studies"}`;
+        document.getElementById("countLabel").textContent =
+          `Showing ${vis} case ${vis === 1 ? "study" : "studies"}`;
         document.getElementById("noResults").style.display = vis === 0 ? "block" : "none";
       }
+
       document.getElementById("filterTabs").addEventListener("click", (e) => {
         if (!e.target.classList.contains("ftab")) return;
         document.querySelectorAll(".ftab").forEach((t) => t.classList.remove("active"));
@@ -1642,24 +1696,35 @@
         activeFilter = e.target.dataset.filter;
         applyFilters();
       });
+
       document.getElementById("searchInput").addEventListener("input", (e) => {
         activeSearch = e.target.value.toLowerCase().trim();
         applyFilters();
       });
 
-      /* --- MODAL --- */
+      /* ---- MODAL ---- */
       let currentId = null;
+
       const visIds = () =>
         cases.filter((c) => {
-          const tag = c.tag.toLowerCase();
-          return (activeFilter === "all" || tag === activeFilter) &&
-            (!activeSearch || c.title.toLowerCase().includes(activeSearch) || c.summary.toLowerCase().includes(activeSearch));
+          const tags = c.tags || [];
+          const fMatch = activeFilter === "all" || tags.includes(activeFilter);
+          const sMatch = !activeSearch ||
+            c.title.toLowerCase().includes(activeSearch) ||
+            c.summary.toLowerCase().includes(activeSearch);
+          return fMatch && sMatch;
         }).map((c) => c.id);
 
       function buildModal(cs) {
         const ids = visIds(), idx = ids.indexOf(cs.id);
         const prev = idx > 0 ? ids[idx - 1] : null;
         const next = idx < ids.length - 1 ? ids[idx + 1] : null;
+
+        // build all tag badges for modal header
+        const headerTagBadges = (cs.tags || []).map(t => {
+          const m = tagMeta[t] || { label: t };
+          return `<span class="modal-header-tag">${m.label}</span>`;
+        }).join("");
 
         const implSection = `
           <div class="ms-head"><div class="ms-icon">🛠️</div><h4>What We Implemented</h4></div>
@@ -1676,7 +1741,7 @@
         return `
           <div class="modal-header">
             <button class="modal-close" onclick="closeModal()">✕</button>
-            <div class="modal-header-tag">${cs.tag}</div>
+            <div class="modal-header-tags">${headerTagBadges}</div>
             <h2>${cs.title}</h2>
             <div class="modal-header-sub">
               <span>📍 ${cs.client}</span><span>${cs.industry}</span>
@@ -1760,6 +1825,7 @@
       document.getElementById("modalOverlay").addEventListener("click", (e) => {
         if (e.target === document.getElementById("modalOverlay")) closeModal();
       });
+
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeModal();
         if (e.key === "ArrowRight" && currentId) {
