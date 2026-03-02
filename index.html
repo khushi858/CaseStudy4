@@ -2069,17 +2069,16 @@
         card.dataset.tags = cs.tags.join(" ");
         card.style.animationDelay = i * 0.045 + "s";
 
-        // build tag badges (show primary + up to 1 extra to keep it tidy)
-        const visibleTags = cs.tags.slice(0, 2);
-        const tagBadges = visibleTags.map(t => {
-          const m = tagMeta[t] || { label: t, cls: "" };
-          return `<span class="card-tag ${m.cls}">${m.label}</span>`;
-        }).join("");
+       // Show ALL tags
+const tagBadges = cs.tags.map(t => {
+  const m = tagMeta[t] || { label: t, cls: "" };
+  return `<span class="card-tag ${m.cls}">${m.label}</span>`;
+}).join("");
 
         card.innerHTML = `
           <div class="card-stripe ${cs.stripe}"></div>
           <div class="card-top">
-            <div class="card-tags">${tagBadges}${cs.tags.length > 2 ? `<span class="card-tag" style="background:#f1f5f9;color:#64748b">+${cs.tags.length - 2}</span>` : ""}</div>
+           <div class="card-tags">${tagBadges}</div>
             <span class="card-number">${String(i + 1).padStart(2, "0")}</span>
           </div>
           <h3>${cs.title}</h3>
